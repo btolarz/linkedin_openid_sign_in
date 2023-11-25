@@ -34,7 +34,7 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
                 headers: {})
   end
 
-  test "redirecting to Google for authorization" do
+  test "redirecting from linkedin for authorization" do
     get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
     get linkedin_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state])
 
@@ -43,4 +43,26 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
 
     assert_equal @payload, flash[:linkedin_sign_in].symbolize_keys
   end
+
+  test "redirecting from linkedin for authorization with invalid state" do
+    get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
+
+    assert_raises LinkedinSignIn::CallbacksController::InvalidState do
+      get linkedin_sign_in.callback_url(code: @token, state:  'invalid_state')
+    end
+  end
+
+  test "redirecting from linkedin for authorization with error" do
+    get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
+
+    get linkedin_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state], error: 'invalid_request', error_description: 'Invalid request')
+
+    assert_response :redirect
+    assert_redirected_to @redirect_url
+
+    assert_equal 'invalid_request', flash[:linkedin_sign_in][:error]
+    assert_equal 'Invalid request', flash[:linkedin_sign_in][:error_description]
+  end
+
+
 end
