@@ -5,7 +5,7 @@ This gem enables you to add LinkedIn sign-in functionality to your Rails app. Wi
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'linkedin_sign_in'
+gem 'linkedin_openid_sign_in'
 ```
 
 And then execute:
@@ -15,7 +15,7 @@ $ bundle
 
 Or install it yourself as:
 ```bash
-$ gem install linkedin_sign_in
+$ gem install linkedin_openid_sign_in
 ```
 
 ## Usage
@@ -31,9 +31,9 @@ Setup you LinkedIn app and get OAuth credentials
 6. Click "Create App" button
 7. ⚠️IMPORTANT: Page admin will have to accept your app. You can check status on the top of the page.
 8. Click "Auth" tab
-9. Add "Authorized redirect URLs" (e.g. `http://localhost:3000/linkedin_sign_in/callbacks#show`)
+9. Add "Authorized redirect URLs" (e.g. `http://localhost:3000/linkedin_openid_sign_in/callbacks#show`)
 
-   This gem use `/linkedin_sign_in/callbacks` path as callback path and then redirect to provided `redirect_url` option
+   This gem use `/linkedin_openid_sign_in/callbacks` path as callback path and then redirect to provided `redirect_url` option
 
 10. Click "Save" button
 11. Copy "Client ID" and "Client Secret" and add to your Rails app credentials
@@ -50,7 +50,7 @@ linkedin_sign_in:
 ### Link to login
 
 ```
-<%= link_to 'Linkedin login', linkedin_sign_in.sign_in_path(redirect_url: create_login_url) %>
+<%= link_to 'Linkedin login', linkedin_openid_sign_in.sign_in_path(redirect_url: create_login_url) %>
 ```
 
 ### Callback redirect

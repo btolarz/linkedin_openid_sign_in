@@ -1,8 +1,8 @@
-module LinkedinSignIn
+module LinkedinOpenidSignIn
   class SignInController < ActionController::Base
     def show
-      client_id = LinkedinSignIn.client_id
-      scope = LinkedinSignIn.options[:scope]
+      client_id = LinkedinOpenidSignIn.client_id
+      scope = LinkedinOpenidSignIn.options[:scope]
 
       linkedin_url = "https://www.linkedin.com/oauth/v2/authorization?response_type=code"+
         "&client_id=#{client_id}" +

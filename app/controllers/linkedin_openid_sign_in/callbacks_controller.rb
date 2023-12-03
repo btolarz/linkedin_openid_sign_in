@@ -1,4 +1,4 @@
-module LinkedinSignIn
+module LinkedinOpenidSignIn
   class CallbacksController < ActionController::Base
     InvalidState = Class.new(StandardError)
 
@@ -46,8 +46,8 @@ module LinkedinSignIn
       request = Net::HTTP::Post.new(url)
       request["Content-Type"] = "application/x-www-form-urlencoded"
       request.body = "code=#{params[:code]}" +
-        "&client_id=#{LinkedinSignIn.client_id}" +
-        "&client_secret=#{LinkedinSignIn.client_secret}" +
+        "&client_id=#{LinkedinOpenidSignIn.client_id}" +
+        "&client_secret=#{LinkedinOpenidSignIn.client_secret}" +
         "&redirect_uri=#{callback_url}" +
         "&grant_type=authorization_code"
 

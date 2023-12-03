@@ -1,10 +1,10 @@
 require 'test_helper'
 
-class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
+class LinkedinOpenidSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
   setup do
     @redirect_url = 'http://www.example.com/login'
-    LinkedinSignIn.client_id = 'client_id'
-    LinkedinSignIn.client_secret = 'client_secret'
+    LinkedinOpenidSignIn.client_id = 'client_id'
+    LinkedinOpenidSignIn.client_secret = 'client_secret'
 
     @payload = {
       iss: 'https://www.linkedin.com',
@@ -14,7 +14,8 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
       sub: 'sub',
       email: 'btolarz@gmail.com',
       email_verified: true,
-      locale: 'en_US'
+      locale: 'en_US',
+      access_token: 'access_token'
     }
 
     @rsa_private = OpenSSL::PKey::RSA.generate 2048
@@ -23,11 +24,11 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
     stub_request(:post, "https://www.linkedin.com/oauth/v2/accessToken").
       with(
         body: {
-          "client_id"=> LinkedinSignIn.client_id,
-          "client_secret"=>LinkedinSignIn.client_secret,
+          "client_id"=> LinkedinOpenidSignIn.client_id,
+          "client_secret"=>LinkedinOpenidSignIn.client_secret,
           "code"=> @token,
           "grant_type"=>"authorization_code",
-          "redirect_uri"=>"http://www.example.com/linkedin_sign_in/callback"},
+          "redirect_uri"=>"http://www.example.com/linkedin_openid_sign_in/callback"},
         ).
       to_return(status: 200,
                 body: { access_token: 'access_token', expires_in: 15, scope: 'email,openid', token_type: 'Bearer', id_token: @token }.to_json,
@@ -35,8 +36,8 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "redirecting from linkedin for authorization" do
-    get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
-    get linkedin_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state])
+    get linkedin_openid_sign_in.sign_in_url(redirect_url: @redirect_url)
+    get linkedin_openid_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state])
 
     assert_response :redirect
     assert_redirected_to @redirect_url
@@ -45,17 +46,17 @@ class LinkedinSignIn::CallbacksControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "redirecting from linkedin for authorization with invalid state" do
-    get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
+    get linkedin_openid_sign_in.sign_in_url(redirect_url: @redirect_url)
 
-    assert_raises LinkedinSignIn::CallbacksController::InvalidState do
-      get linkedin_sign_in.callback_url(code: @token, state:  'invalid_state')
+    assert_raises LinkedinOpenidSignIn::CallbacksController::InvalidState do
+      get linkedin_openid_sign_in.callback_url(code: @token, state:  'invalid_state')
     end
   end
 
   test "redirecting from linkedin for authorization with error" do
-    get linkedin_sign_in.sign_in_url(redirect_url: @redirect_url)
+    get linkedin_openid_sign_in.sign_in_url(redirect_url: @redirect_url)
 
-    get linkedin_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state], error: 'invalid_request', error_description: 'Invalid request')
+    get linkedin_openid_sign_in.callback_url(code: @token, state:  flash[:linkedin_sign_in][:state], error: 'invalid_request', error_description: 'Invalid request')
 
     assert_response :redirect
     assert_redirected_to @redirect_url

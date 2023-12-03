@@ -1,12 +1,12 @@
-require_relative "lib/linkedin_sign_in/version"
+require_relative "lib/linkedin_openid_sign_in/version"
 
 Gem::Specification.new do |spec|
-  spec.name        = "linkedin_sign_in"
-  spec.version     = LinkedinSignIn::VERSION
+  spec.name        = "linkedin_openid_sign_in"
+  spec.version     = LinkedinOpenidSignIn::VERSION
   spec.authors     = ["Bogusław Tolarz"]
   spec.email       = ["btolarz@gmail.com"]
   spec.homepage    = "https://github.com/btolarz/linkedin_sign_in"
-  spec.summary     = "LinkedIn Sign In for Rails"
+  spec.summary     = "LinkedIn OpenId Sign In for Rails"
   spec.license     = "MIT"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do

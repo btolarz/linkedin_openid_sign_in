@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    linkedin_sign_in (0.1.0)
+    linkedin_openid_sign_in (0.1.0)
       jwt (>= 1.5.6)
       rails (>= 5.2.0)
 
@@ -201,7 +201,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   jwt
-  linkedin_sign_in!
+  linkedin_openid_sign_in!
   rails (~> 7.1)
   rake
   sqlite3
